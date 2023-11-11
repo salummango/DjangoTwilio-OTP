@@ -1,0 +1,192 @@
+/* Global Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+/* Header Styles */
+
+header {
+    background-color: #f5f5f5;
+    padding: 20px 0;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+nav ul li a {
+    color: #333;
+    text-decoration: none;
+    padding: 5px;
+}
+
+
+/* Hero Section Styles */
+
+#hero {
+    background-image: url(hero-image.jpg);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    text-align: center;
+    padding: 200px 0;
+}
+
+.hero-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 24px;
+    margin-bottom: 40px;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #ff5500;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #ff4400;
+}
+
+
+/* About Section Styles */
+
+#about {
+    background-color: #f5f5f5;
+    padding: 40px 0;
+}
+
+
+/* Menu Section Styles */
+
+#menu {
+    padding: 40px 0;
+}
+
+.menu-items {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.menu-item {
+    width: calc(33.33% - 20px);
+    margin-bottom: 40px;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: #f5f5f5;
+}
+
+.menu-item img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+
+/* Specials Section Styles */
+
+#specials {
+    padding: 40px 0;
+}
+
+.specials-items {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.specials-item {
+    width: calc(33.33% - 20px);
+    margin-bottom: 40px;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: #f5f5f5;
+}
+
+.specials-item img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+
+/* Contact Section Styles */
+
+#contact {
+    background-color: #f5f5f5;
+    padding: 40px 0;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+form button {
+    background-color: #ff5500;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #ff4400;
+}
+
+
+/* Footer Styles */
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+}
+
+footer p {
+    margin: 0;
+}

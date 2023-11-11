@@ -1,0 +1,212 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/login2.css' %}">
+</head>
+
+<body>
+    <div class="login_box">
+
+        <form id="login-form" method="post">
+        {% csrf_token %}
+          <h1>Login</h1>
+          <div class="input_box">
+            <input type="email" name="email" placeholder="Email" required>
+          </div>
+
+          <div class="input_box">
+            <input type="password" name="password" placeholder="Password" required>
+          </div>
+
+          <div class="remember">
+              <input type="checkbox">
+              <label for="">remember me</label>
+          </div>
+
+          <div class="forget"><a href="#">forget password ?</a></div>
+
+          <div class="log">
+            <button type="submit">Login</button>
+          </div>
+
+          <div class="reg">
+              <p>don't have an account</p>
+              <a href="{% url 'register' %}">register here</a>
+          </div>
+        </form>
+
+        <div class="otp-verification-form" style="display: none;">
+            <form id="otp-verification-form">
+                {% csrf_token %}
+                <input type="hidden" name="email" value="{{ email }}">
+                <label for="otp">Enter OTP:</label>
+                <input type="text" id="otp" name="otp">
+                <button type="submit">Verify OTP</button>
+            </form>
+        </div>
+
+    </div>
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% comment %} <script>
+       // login.js
+        $(document).ready(function() {
+            $('#login-form').submit(function(e) {
+                e.preventDefault();  // Prevent form submission
+
+                // Serialize the form data
+                var formData = $(this).serialize();
+
+                // Make the AJAX request to the API endpoint
+                $.ajax({
+                    url: '/api/login/',  // Replace with your actual API endpoint URL
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        // Handle the successful login
+                        console.log(response);
+                        alert('Login successful,enter your OTP below');
+        
+                        // Capture the email and hide the login form
+                        var email = $('input[name="email"]').val();
+                        $('.login-form').hide();
+                        $('.otp-verification-form').show();
+                        // Set the email in the hidden field for OTP verification
+                        $('#otp-verification-form input[name="email"]').val(email);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        // Handle the login error
+                        console.log(xhr.responseJSON);
+                        var errorData = xhr.responseJSON;
+                        var errorMessage = 'Login failed. Please check your credentials.';
+                        if (errorData.detail === 'user not found') {
+                            errorMessage = 'User does not exist.';
+                        }
+                        alert(errorMessage);
+                    }
+                });
+            });
+
+            $('#otp-verification-form').submit(function(e) {
+                e.preventDefault();  // Prevent form submission
+
+                // Serialize the form data
+                var formData = $(this).serialize();
+
+                // Make the AJAX request to verify OTP
+                $.ajax({
+                    url: '/api/verify_otp/',  // Replace with your actual API endpoint URL for OTP verification
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        // Handle the successful OTP verification
+                        console.log(response);
+                        alert('OTP verified successfully');
+                        // Redirect to the appropriate URL (e.g., dashboard)
+                        window.location.href = '/api/dashboard/';
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        // Handle OTP verification error
+                        console.log(xhr.responseJSON);
+                        alert('OTP verification failed. Please try again.');
+                    }
+                });
+            });
+        });
+
+    </script> {% endcomment %}
+    <script>
+        $(document).ready(function() {
+            // Function to get the CSRF cookie value
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Check if the cookie name matches with the CSRF token cookie name
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        
+            $('#login-form').submit(function(e) {
+                e.preventDefault();
+        
+                var formData = $(this).serialize();
+        
+                // Include CSRF token in the headers
+                var csrftoken = getCookie('csrftoken');
+                $.ajax({
+                    url: '/api/login/',
+                    type: 'POST',
+                    data: formData,
+                    headers: { 'X-CSRFToken': csrftoken },
+                    success: function(response) {
+                        // Your success handling code
+                        // Handle the successful login
+                        console.log(response);
+                        alert('Login successful,enter your OTP below');
+        
+                        // Capture the email and hide the login form
+                        var email = $('input[name="email"]').val();
+                        $('.login-form').hide();
+                        $('.otp-verification-form').show();
+                        // Set the email in the hidden field for OTP verification
+                        $('#otp-verification-form input[name="email"]').val(email);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        // Your error handling code
+                        // Handle the login error
+                        console.log(xhr.responseJSON);
+                        var errorData = xhr.responseJSON;
+                        var errorMessage = 'Login failed. Please check your credentials.';
+                        if (errorData.detail === 'user not found') {
+                            errorMessage = 'User does not exist.';
+                        }
+                        alert(errorMessage);
+                    }
+                });
+            });
+        
+            $('#otp-verification-form').submit(function(e) {
+                e.preventDefault();
+        
+                var formData = $(this).serialize();
+        
+                // Include CSRF token in the headers
+                var csrftoken = getCookie('csrftoken');
+                $.ajax({
+                    url: '/api/verify_otp/',
+                    type: 'POST',
+                    data: formData,
+                    headers: { 'X-CSRFToken': csrftoken },
+                    success: function(response) {
+                        // Your success handling code
+                        // Handle the successful OTP verification
+                        console.log(response);
+                        alert('OTP verified successfully');
+                        // Redirect to the appropriate URL (e.g., dashboard)
+                        window.location.href = '/api/dashboard/';
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        // Your error handling code
+                         // Handle OTP verification error
+                         console.log(xhr.responseJSON);
+                         alert('OTP verification failed. Please try again.');
+                    }
+                });
+            });
+        });
+        
+    </script>
+</body>
+</html>

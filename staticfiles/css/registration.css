@@ -1,0 +1,88 @@
+.container {
+    overflow: hidden;
+    width: 600px;
+    background: #fff;
+    padding: 5px;
+    border-radius: 15px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    margin-top: 5px;
+    margin-left: 1rem;
+}
+
+.container .title {
+    font-size: 30px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.form-inner {
+    width: 100%;
+    margin-bottom: 2%;
+}
+
+.form-inner form .field {
+    height: 50px;
+    width: 60%;
+    margin-top: 15px;
+    margin-left: 20%;
+}
+
+.form-inner form .field label {
+    font-weight: bold;
+}
+
+.form-inner form .field input {
+    height: 90%;
+    width: 100%;
+    outline: none;
+    border-radius: 15px;
+    border: 1px solid lightgrey;
+    border-bottom-width: 2px;
+    font-size: 17px;
+    transition: all 0.3s ease;
+    padding-left: 20px;
+}
+
+.form-inner form .field input:focus {
+    border-color: #1a75ff;
+}
+
+.form-inner form .field input::placeholder {
+    color: #999;
+    transition: all 0.3s ease;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    text-align: center;
+    width: 100%;
+}
+
+form .field input:focus::placeholder {
+    color: #1a75ff;
+}
+
+form button {
+    height: 85%;
+    width: 100%;
+    background: -webkit-linear-gradient(right, #003366, #004080, #0059b3, #0073e6);
+    border-radius: 15px;
+    transition: all 0.4s ease;
+    margin-bottom: 10px;
+    margin-top: 7px;
+    z-index: 1;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-left: 2%;
+}
+
+.error-field input {
+    border: 1px solid red;
+}

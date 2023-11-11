@@ -1,0 +1,256 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Dashboard - Restaurant</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/user_dashboard.css' %}">
+    
+</head>
+
+<body>
+    <div class="container">
+        <h1>User Dashboard</h1>
+        <div class="dashboard">
+
+            <div class="left_side">
+                <div class="profile">
+                    <h2>Profile</h2>
+                    <div class="profile-details">
+                        <div class="user-info"></div>
+                        <div class="btn">
+                            <button id="delete">delete</button>
+                            <button id="updating">update</button>
+                        </div>
+                    </div>
+                     {% comment %} Registration info {% endcomment %}
+                    <div id="updates" style="display: none;">
+                        <div class="popup-content">
+                            <div class="update-container">
+                                <div class="title">Updating</div>
+
+                                <div class="form-inner">
+                                    <form  method="POST" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="field">
+                                            <label>First Name</label>
+                                            <input type="text" name="first_name" placeholder="First Name" required pattern="[A-Za-z]+" title="First name can only contain alphabetic characters">
+                                        </div>
+                                    
+                                        <div class="field">
+                                            <label>Last Name</label>
+                                            <input type="text" name="last_name" placeholder="Last Name" required pattern="[A-Za-z]+" title="Last name can only contain alphabetic characters">
+                                        </div>
+                                    
+                                        <div class="field">
+                                            <label>E-mail</label>
+                                            <input type="email" name="email" placeholder="Email" required title="Invalid email address">
+                                        </div>
+                                    
+                                        <div class="field">
+                                            <label>Phone number</label>
+                                            <input type="tel" name="phoneNo" placeholder="Phone Number" required title="Invalid phone number">
+                                        </div>
+                                    
+                                        <div class="field">
+                                            <label>Profile Picture</label>
+                                            <input type="file" name="userImage" placeholder="Upload Image" accept=".jpg,.png" required>
+                                        </div>
+                                    
+                                        <div class="field">
+                                            <label>Password</label>
+                                            <input type="password" name="password" placeholder="Password" required pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$" title="Password must be at least 8 characters long and contain at least one letter, one number, and one special character">
+                                        </div>
+
+                                        <div class="btn-layer">
+                                            <button id="closing">cancel</button>
+                                            <button id="update">Confirm</button>
+                                        </div>
+                                
+                                    </form>
+                                    <div id="error-message" style="color: red;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="notifications">
+                    <h2>Notifications</h2>
+                    <ul id="notification-list"></ul>
+                </div>
+
+            </div>
+
+            <div class="right_side">
+                <div class="calendar">
+                    <h2>Calendar</h2>
+                    <div id="calendar"></div>
+                </div>
+                <div class="orders">
+                    <h2>Order History</h2>
+                    <ul id="order-list"></ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/user_dashboard.js' %}"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+    <script>
+        // calendar library or plugin.FullCalendar library (https://fullcalendar.io/).
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth'
+            });
+            calendar.render();
+        });
+
+
+        //
+        const updation=document.getElementById('updating');
+        const updationInfo=document.getElementById('updates')
+
+        updation.addEventListener('click',()=>{
+            updationInfo.style.display ='block'
+        });
+
+        const close=document.getElementById('closing');
+        close.addEventListener('click',()=>{
+            updationInfo.style.display ='none'
+        });
+
+
+        $(document).ready(function() {
+            // Fetch CSRF token from the cookie
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            var csrftoken = getCookie('csrftoken');
+
+            // Fetch user information and display it
+            $.ajax({
+                url: '/api/putdelete', 
+                type: 'GET',
+                success: function(response) {
+                    var user = response; 
+        
+                    // Display user information in the template
+                    var userInfo =
+                                    '<div class="profile-picture">' +
+                                    '<img src="' + user.userImage + '" alt="Profile Picture">' +
+                                    '</div>' +
+                                    '<h3>Name: ' + user.first_name + ' ' + user.last_name + '</h3>' +
+                                    '<p>Email: ' + user.email + '</p>' +
+                                    '<p>Phone No: ' + user.phoneNo + '</p>';
+
+                                $('.user-info').append(userInfo);
+
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.log(xhr.responseJSON);
+                    alert('Failed to fetch user information.');
+                }
+            });
+        
+            // Delete user account
+            $('#delete').click(function() {
+                $.ajax({
+                    url: '/api/putdelete',
+                    type: 'DELETE',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('X-CSRFToken', csrftoken); 
+                    },
+                    success: function(response) {
+                        alert('User account deleted successfully.');
+                        window.location.href = '/';
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.log(xhr.responseJSON);
+                        alert('Failed to delete user account.');
+                    }
+                });
+            });
+        
+            // Update user account
+            $('#update').click(function() {
+                var updatedUserDetails = new FormData();
+                updatedUserDetails.append('first_name', $('#first_name').val());
+                updatedUserDetails.append('last_name', $('#last_name').val());
+                updatedUserDetails.append('email', $('#email').val());
+                updatedUserDetails.append('phoneNo', $('#phoneNo').val());
+                updatedUserDetails.append('password', $('#password').val());
+                updatedUserDetails.append('userImage', $('#userImage')[0].files[0]);
+            
+                $.ajax({
+                    url: '/api/putdelete',
+                    type: 'PUT',
+                    data: updatedUserDetails,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                    },
+                    success: function(response) {
+                        alert('User account updated successfully.');
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.log(xhr.responseJSON);
+                        alert('Failed to update user account.');
+                    }
+                });
+            });
+            
+        });
+        
+    </script>
+    {% comment %} <script>
+        $('#update').click(function() {
+            // Get updated user details from the user 
+    
+            var updatedUserDetails = {
+                // Populate with the updated user details
+                first_name: $('#first_name').val(),
+                last_name: $('#last_name').val(),
+                email: $('#email').val(),
+                phoneNo: $('#phoneNo').val(),
+                password:$('#password').val(),
+                userImage:$('#userImage').val(),
+            };
+    
+            $.ajax({
+                url: '/api/putdelete',
+                type: 'PUT',
+                data: updatedUserDetails,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                },
+                success: function(response) {
+                    alert('User account updated successfully.');
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.log(xhr.responseJSON);
+                    alert('Failed to update user account.');
+                }
+            });
+        });
+    </script> {% endcomment %}
+</body>
+
+</html>

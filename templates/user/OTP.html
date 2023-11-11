@@ -1,0 +1,52 @@
+<!-- user/otp_verification.html -->
+
+<!DOCTYPE html>
+<html>
+    <body>
+        
+        {% block content %}
+        <h2>OTP Verification</h2>
+        <p>An OTP has been sent to your phone. Please enter the OTP below:</p>
+        <form id="otp-verification-form">
+            {% csrf_token %}
+            <input type="hidden" name="email" value="{{ email }}">
+            <label for="otp">OTP:</label>
+            <input type="text" id="otp" name="otp">
+            <button type="submit">Verify OTP</button>
+        </form>
+        {% endblock %}
+
+
+    </body>
+    <script>
+        // otp_verification.js
+        $(document).ready(function() {
+            $('#otp-verification-form').submit(function(e) {
+                e.preventDefault();  // Prevent form submission
+        
+                // Serialize the form data
+                var formData = $(this).serialize();
+        
+                // Make the AJAX request to verify OTP
+                $.ajax({
+                    url: '/api/verify_otp/',  // Replace with your actual API endpoint URL for OTP verification
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        // Handle the successful OTP verification
+                        console.log(response);
+                        alert('OTP verified successfully');
+                        // Redirect to the appropriate URL (e.g., dashboard)
+                        window.location.href = '/api/dashboard/';
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        // Handle OTP verification error
+                        console.log(xhr.responseJSON);
+                        alert('OTP verification failed. Please try again.');
+                    }
+                });
+            });
+        });
+        
+    </script>
+</html>

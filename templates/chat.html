@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+</head>
+<body>
+    <div class="top">
+        <h1>Help Center</h1>
+        <a href={% url 'home' %}>Exit</a>
+    </div>
+    <div class="chat-container">
+        {% for message in chat_messages %}
+            {% if message.sender == 'user' %}
+                <div class="user-message">
+                    <p>{{ message.content }}</p>
+                </div>
+            {% elif message.sender == 'bot' %}
+                <div class="bot-message">
+                    <p>{{ message.content }}</p>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="user_input" placeholder="Enter your message">
+        <button type="submit">Send</button>
+    </form>
+</body>
+</html>

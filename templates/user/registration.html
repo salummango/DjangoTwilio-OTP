@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <style>
+        .error-field input {
+            border: 1px solid red;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/registration.css' %}">
+</head>
+<body>
+    <form id="register-form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- Add your form fields here -->
+        <div class="form-group">
+            <input type="text" name="first_name" placeholder="First Name" required>
+        </div>
+        <div class="form-group">
+            <input type="text" name="last_name" placeholder="Last Name" required>
+        </div>
+        <div class="form-group">
+            <input type="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+        <div class="form-group">
+            <input type="text" name="phoneNo" placeholder="Phone Number" required>
+        </div>
+        <div class="form-group">
+            <input type="file" name="userImage" placeholder="Upload Image" accept=".JPG,.PNG" required>
+        </div>
+        <button type="submit">Register</button>
+    </form>
+
+    <div id="error-message" style="color: red;"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#register-form').submit(function(e) {
+                e.preventDefault();  // Prevent form submission
+
+                // Serialize the form data
+                var formData = $(this).serialize();
+                var csrfToken = "{{ csrf_token }}";
+
+                // Remove previous error styles
+                $('.form-group').removeClass('error-field');
+
+                // Make the AJAX request to the API endpoint
+                $.ajax({
+                    headers: {
+                        "X-CSRFToken": csrfToken
+                    },
+                    url: '/api/register/',
+                    type: 'POST',
+                    data: new FormData(this),
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // Handle the successful registration response
+                        console.log(response);
+                        alert('Registration successful');
+                        window.location.href = '/login/';  // Replace with the appropriate URL for the login page
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle the registration error
+                        console.log(xhr.responseText);
+                        var errors = JSON.parse(xhr.responseText);
+                        for (var key in errors) {
+                            $('[name="' + key + '"]').closest('.form-group').addClass('error-field');
+                        }
+                        var errorMessage = errors.email[0];
+                        $('#error-message').text(errorMessage);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
